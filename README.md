@@ -44,9 +44,3 @@ Bu proje, insanın stres ve heyecan anında cilt direncinde (GSR - Galvanic Skin
    * **Kırmızı LED:** Cilt direnci %20 ve üzeri artış gösterirse (Yüksek Stres/Yalan).
 
 ---
-
-
-## 📈 Seri Port Grafiği
-Arduino IDE üzerindeki **Serial Plotter** ekranı açıldığında, eşik çizgileri ile anlık verinin kesişimi canlı olarak takip edilebilir:
-
-![Serial Plotter Ekranı](plotter.png)
