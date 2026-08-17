@@ -1,12 +1,3 @@
-/**
- * XIAO ESP32-S3 + Grove GSR + HW-479 RGB LED
- * v5 - dusuk ADC (~150-200) icin yuzdesel esik, daha hassas
- *
- * Sakinken drop kucuk / YESIL olmali.
- * Test: ani nefes, soguk dusun, korkut → drop artsin → MAVI/KIRMIZI
- * Serial 115200
- */
-
 const int PIN_GSR = A0;
 const int PIN_G   = D1;
 const int PIN_B   = D2;
@@ -18,9 +9,8 @@ const int SAMPLE_DELAY_MS = 3;
 const float FAST_ALPHA = 0.45f;
 const float SLOW_ALPHA = 0.02f;
 
-// Yuzdesel esikler (slow'a gore)
-const float PCT_BLUE = 0.04f;  // %4 dusus → mavi
-const float PCT_RED  = 0.08f;  // %8 dusus → kirmizi
+const float PCT_BLUE = 0.04f;
+const float PCT_RED  = 0.08f;
 
 const unsigned long CALIB_MS = 4000;
 const unsigned long LED_HOLD_MS = 200;
@@ -78,7 +68,6 @@ void applyLedDebounced(LedState wanted) {
 }
 
 void computeThresholds(float level, float stdv) {
-  // Hem yuzde hem gurultu tabani
   float fromPctBlue = level * PCT_BLUE;
   float fromPctRed  = level * PCT_RED;
   float fromStdBlue = stdv * 1.6f + 4.0f;
@@ -87,7 +76,6 @@ void computeThresholds(float level, float stdv) {
   threshBlue = max(fromPctBlue, fromStdBlue);
   threshRed  = max(fromPctRed, fromStdRed);
 
-  // Dusuk ADC (~160) icin taban
   threshBlue = constrain(threshBlue, 5.0f, 40.0f);
   threshRed  = constrain(threshRed, 10.0f, 80.0f);
   if (threshRed < threshBlue + 5.0f) threshRed = threshBlue + 5.0f;
@@ -189,11 +177,9 @@ void loop() {
   fastV = fastV * (1.0f - FAST_ALPHA) + (float)raw * FAST_ALPHA;
   float drop = slowV - fastV;
 
-  // Sakinken baseline guncelle
   if (drop < threshBlue * 0.5f) {
     slowV = slowV * (1.0f - SLOW_ALPHA) + fastV * SLOW_ALPHA;
     drop = slowV - fastV;
-    // Seviye kayarsa esikleri hafif yenile
     computeThresholds(slowV, threshBlue * 0.4f);
   }
 
